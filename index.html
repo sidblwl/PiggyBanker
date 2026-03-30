@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PiggyBanker — Prototype</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <!-- Top App Bar -->
+      <header class="topbar">
+        <button class="icon-btn" id="btnMenu" aria-label="Open menu">
+          <!-- hamburger -->
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+
+        <div class="brand">
+          <div class="brand-dot"></div>
+          <div class="brand-text">
+            <div class="brand-title">PiggyBanker</div>
+            <div class="brand-subtitle">Split money into goals</div>
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <button class="icon-btn" id="btnBell" aria-label="Notifications">
+            <!-- bell -->
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 22a2.2 2.2 0 0 0 2.2-2.2H9.8A2.2 2.2 0 0 0 12 22Z" fill="currentColor"/>
+              <path d="M18 16v-5a6 6 0 1 0-12 0v5l-2 2h16l-2-2Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button class="icon-btn" id="btnProfile" aria-label="Profile">
+            <!-- user -->
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Z" fill="none" stroke="currentColor" stroke-width="2"/>
+              <path d="M20 21a8 8 0 1 0-16 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar" aria-hidden="true">
+        <div class="sidebar-header">
+          <div class="sidebar-title">Navigation</div>
+          <button class="icon-btn" id="btnCloseSidebar" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <nav class="sidebar-nav">
+          <button class="nav-item active" data-route="overview">
+            <span class="nav-dot"></span> Overview
+          </button>
+          <button class="nav-item" data-route="goals">
+            <span class="nav-dot"></span> Savings Goals
+          </button>
+          <button class="nav-item" data-route="expenses">
+            <span class="nav-dot"></span> Expenses + Cashflow
+          </button>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="hint">
+            Tip: Click a goal card to open the expanded progress view.
+          </div>
+        </div>
+      </aside>
+
+      <!-- Backdrop -->
+      <div class="backdrop" id="backdrop"></div>
+
+      <!-- Main Content -->
+      <main class="main">
+        <!-- Page: OVERVIEW -->
+        <section class="page" id="page-overview" data-page="overview">
+          <div class="page-head">
+            <h1>Overview</h1>
+            <p class="muted">Quick search + snapshots of your money.</p>
+          </div>
+
+          <div class="card">
+            <div class="search">
+              <span class="search-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z" fill="none" stroke="currentColor" stroke-width="2"/>
+                  <path d="M21 21l-4.3-4.3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <input id="overviewSearch" type="text" placeholder="Search goals, categories, transactions…" />
+              <button class="pill" id="btnClearSearch">Clear</button>
+            </div>
+          </div>
+
+          <div class="grid two">
+            <div class="card">
+              <div class="card-title-row">
+                <div class="card-title">Balances</div>
+                <div class="chip" id="chipMonthRange">This month</div>
+              </div>
+
+              <div class="stat-row">
+                <div class="stat">
+                  <div class="stat-label">Checking</div>
+                  <div class="stat-value" id="statChecking">$0</div>
+                </div>
+                <div class="stat">
+                  <div class="stat-label">Savings</div>
+                  <div class="stat-value" id="statSavings">$0</div>
+                </div>
+              </div>
+
+              <div class="divider"></div>
+
+              <div class="stat-row">
+                <div class="stat">
+                  <div class="stat-label">Left to spend</div>
+                  <div class="stat-value" id="statLeftToSpend">$0</div>
+                </div>
+                <div class="stat">
+                  <div class="stat-label">Goal contributions</div>
+                  <div class="stat-value" id="statGoalContrib">$0</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-title-row">
+                <div class="card-title">Top Goals</div>
+                <button class="link-btn" id="btnGoGoals">View all</button>
+              </div>
+              <div class="mini-list" id="miniGoalsList"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title-row">
+              <div class="card-title">Recent activity</div>
+              <button class="link-btn" id="btnGoExpenses">See expenses</button>
+            </div>
+            <div class="tx-list" id="recentTxList"></div>
+          </div>
+        </section>
+
+        <!-- Page: SAVINGS GOALS -->
+        <section class="page hidden" id="page-goals" data-page="goals">
+          <div class="page-head">
+            <h1>Savings Goals</h1>
+            <p class="muted">Split money into categories and track progress.</p>
+          </div>
+
+          <div class="card">
+            <div class="row between">
+              <div>
+                <div class="card-title">Your goals</div>
+                <div class="muted small">Tap a goal to expand.</div>
+              </div>
+              <button class="primary" id="btnAddGoal">+ Add goal</button>
+            </div>
+
+            <div class="goals-list" id="goalsList"></div>
+          </div>
+        </section>
+
+        <!-- Page: EXPENSES + CASHFLOW -->
+        <section class="page hidden" id="page-expenses" data-page="expenses">
+          <div class="page-head">
+            <h1>Expenses + Cashflow</h1>
+            <p class="muted">Track spending by category and account.</p>
+          </div>
+
+          <div class="grid two">
+            <div class="card">
+              <div class="card-title-row">
+                <div class="card-title">Accounts</div>
+                <div class="chip" id="chipAutoLink">Auto linked</div>
+              </div>
+              <div class="accounts" id="accountsList"></div>
+
+              <div class="divider"></div>
+
+              <div class="row between">
+                <div>
+                  <div class="card-title">Add transaction</div>
+                  <div class="muted small">This updates the chart + totals.</div>
+                </div>
+              </div>
+
+              <form class="form" id="txForm">
+                <div class="form-row">
+                  <label>
+                    Name
+                    <input id="txName" type="text" placeholder="e.g., Target" required />
+                  </label>
+                  <label>
+                    Amount
+                    <input id="txAmount" type="number" step="0.01" placeholder="e.g., 24.99" required />
+                  </label>
+                </div>
+
+                <div class="form-row">
+                  <label>
+                    Category
+                    <select id="txCategory"></select>
+                  </label>
+                  <label>
+                    Account
+                    <select id="txAccount"></select>
+                  </label>
+                </div>
+
+                <div class="form-row">
+                  <label>
+                    Date
+                    <input id="txDate" type="date" required />
+                  </label>
+
+                  <button class="primary" type="submit">Add</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="card">
+              <div class="card-title-row">
+                <div class="card-title">Spending by category</div>
+                <div class="chip" id="chipRange">12/01 – 12/31</div>
+              </div>
+              <div class="chart-wrap">
+                <canvas id="pieChart" width="380" height="260" aria-label="Pie chart"></canvas>
+                <div class="legend" id="pieLegend"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="row between">
+              <div>
+                <div class="card-title">Transactions</div>
+                <div class="muted small">Filter by category.</div>
+              </div>
+
+              <div class="row">
+                <select id="txFilter" class="select small"></select>
+                <button class="pill" id="btnClearTx">Clear all</button>
+              </div>
+            </div>
+
+            <div class="tx-list" id="txList"></div>
+          </div>
+        </section>
+
+        <!-- Page: GOAL DETAIL -->
+        <section class="page hidden" id="page-goal-detail" data-page="goal-detail">
+          <div class="page-head">
+            <div class="row between">
+              <div>
+                <h1 id="goalTitle">Goal Progress</h1>
+                <p class="muted" id="goalSubtitle">Track your progress and contribute.</p>
+              </div>
+              <button class="pill" id="btnBackToGoals">← Back</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="row between">
+              <div class="goal-big">
+                <div class="goal-big-name" id="goalBigName">—</div>
+                <div class="muted small" id="goalBigMeta">Goal: $0</div>
+              </div>
+              <div class="pct-badge" id="goalPct">0%</div>
+            </div>
+
+            <div class="progress big">
+              <div class="progress-fill" id="goalBigProgress" style="width: 0%"></div>
+            </div>
+
+            <div class="row between">
+              <div class="muted small" id="goalBigNumbers">$0 / $0</div>
+              <div class="muted small" id="goalBigRemaining">$0 remaining</div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="row">
+              <form class="form inline" id="contribForm">
+                <label class="grow">
+                  Contribute to this goal
+                  <input id="contribAmount" type="number" step="0.01" placeholder="e.g., 25" required />
+                </label>
+                <button class="primary" type="submit">Add</button>
+              </form>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="notes">
+              <div class="card-title">Notes</div>
+              <textarea id="goalNotes" placeholder="Add a note (why this goal matters, due date, plan, etc.)"></textarea>
+              <div class="row end">
+                <button class="pill" id="btnSaveNotes">Save notes</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title-row">
+              <div class="card-title">Recent contributions</div>
+              <div class="muted small">Auto-generated from your contributions.</div>
+            </div>
+            <div class="tx-list" id="goalContribList"></div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Bottom Nav -->
+      <nav class="bottom-nav" aria-label="Bottom navigation">
+        <button class="tab active" data-route="overview">
+          <span class="tab-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-5v-7H10v7H5a1 1 0 0 1-1-1Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+          </span>
+          <span class="tab-label">Home</span>
+        </button>
+
+        <button class="tab" data-route="goals">
+          <span class="tab-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M7 3h10v6H7zM5 21h14M8 9v12M16 9v12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+          <span class="tab-label">Goals</span>
+        </button>
+
+        <button class="tab" data-route="expenses">
+          <span class="tab-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 19V5m0 14h16M8 15l3-3 3 2 5-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span class="tab-label">Expenses</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- Modals -->
+    <dialog class="modal" id="goalModal">
+      <form method="dialog" class="modal-inner" id="goalModalForm">
+        <div class="modal-head">
+          <div class="modal-title">Add a savings goal</div>
+          <button class="icon-btn" value="cancel" aria-label="Close">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="form">
+          <div class="form-row">
+            <label>
+              Goal name
+              <input id="newGoalName" type="text" placeholder="e.g., TV" required />
+            </label>
+          </div>
+
+          <div class="form-row">
+            <label>
+              Target amount
+              <input id="newGoalTarget" type="number" step="0.01" placeholder="e.g., 200" required />
+            </label>
+            <label>
+              Starting saved (optional)
+              <input id="newGoalSaved" type="number" step="0.01" placeholder="e.g., 50" />
+            </label>
+          </div>
+
+          <div class="form-row">
+            <label>
+              Accent color (optional)
+              <input id="newGoalColor" type="color" value="#5B8CFF" />
+            </label>
+            <label>
+              Emoji (optional)
+              <input id="newGoalEmoji" type="text" maxlength="2" placeholder="📺" />
+            </label>
+          </div>
+
+          <div class="row end">
+            <button class="pill" value="cancel">Cancel</button>
+            <button class="primary" id="btnCreateGoal" value="default">Create</button>
+          </div>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
