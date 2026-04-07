@@ -1,18 +1,30 @@
 :root{
-  --bg: #0b1020;
-  --panel: rgba(255,255,255,0.06);
-  --panel-strong: rgba(255,255,255,0.10);
-  --text: rgba(255,255,255,0.92);
-  --muted: rgba(255,255,255,0.65);
-  --faint: rgba(255,255,255,0.35);
-  --stroke: rgba(255,255,255,0.12);
-  --shadow: 0 14px 40px rgba(0,0,0,0.35);
-  --radius: 18px;
-  --radius-sm: 12px;
-  --accent: #5B8CFF;
+  /* FIXED BACKGROUND (neutral, not blue) */
+  --bg: #0A0A0A;
+
+  /* PANELS (more solid, less washed out) */
+  --panel: rgba(255,255,255,0.08);
+  --panel-strong: rgba(255,255,255,0.14);
+
+  /* TEXT (clear hierarchy, fewer similar grays) */
+  --text: #FFFFFF;
+  --muted: rgba(255,255,255,0.78);
+  --faint: rgba(255,255,255,0.50);
+
+  /* BORDERS (stronger visibility) */
+  --stroke: rgba(255,255,255,0.18);
+
+  /* KEEP YOUR STYLE BUT BOOST CONTRAST */
+  --shadow: 0 14px 40px rgba(0,0,0,0.6);
+
+  /* ACCENTS (slightly brighter for visibility) */
+  --accent: #6C8CFF;
   --good: #2EE59D;
   --warn: #FFB020;
   --bad: #FF5B6E;
+
+  --radius: 18px;
+  --radius-sm: 12px;
 }
 
 *{ box-sizing: border-box; }
