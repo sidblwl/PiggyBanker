@@ -236,6 +236,20 @@ $("#overviewSearch").addEventListener("input", (e) => {
 /* ---------- Goals modal ---------- */
 const goalModal = $("#goalModal");
 
+$("#btnCloseGoalModal").addEventListener("click", () => {
+  goalModal.close();
+  hideKeyboard();
+});
+
+$("#btnCancelGoalModal").addEventListener("click", () => {
+  goalModal.close();
+  hideKeyboard();
+});
+
+goalModal.addEventListener("close", () => {
+  hideKeyboard();
+});
+
 $("#btnAddGoal").addEventListener("click", () => {
   $("#newGoalName").value = "";
   $("#newGoalTarget").value = "";

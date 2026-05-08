@@ -356,7 +356,7 @@
       <form method="dialog" class="modal-inner" id="goalModalForm">
         <div class="modal-head">
           <div class="modal-title">Add a savings goal</div>
-          <button class="icon-btn" value="cancel" aria-label="Close">
+          <button class="icon-btn" value="cancel" aria-label="Close" formnovalidate id="btnCloseGoalModal">
             ✕
           </button>
         </div>
@@ -392,7 +392,7 @@
           </div>
 
           <div class="row end">
-            <button class="pill" value="cancel">Cancel</button>
+            <button class="pill" value="cancel" formnovalidate id="btnCancelGoalModal">Cancel</button>
             <button class="primary" id="btnCreateGoal" value="default">Create</button>
           </div>
         </div>
