@@ -11,7 +11,6 @@
       <!-- Top App Bar -->
       <header class="topbar">
         <button class="icon-btn" id="btnMenu" aria-label="Open menu">
-          <!-- hamburger -->
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
@@ -27,14 +26,13 @@
 
         <div class="topbar-actions">
           <button class="icon-btn" id="btnBell" aria-label="Notifications">
-            <!-- bell -->
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 22a2.2 2.2 0 0 0 2.2-2.2H9.8A2.2 2.2 0 0 0 12 22Z" fill="currentColor"/>
               <path d="M18 16v-5a6 6 0 1 0-12 0v5l-2 2h16l-2-2Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
             </svg>
           </button>
+
           <button class="icon-btn" id="btnProfile" aria-label="Profile">
-            <!-- user -->
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Z" fill="none" stroke="currentColor" stroke-width="2"/>
               <path d="M20 21a8 8 0 1 0-16 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -73,7 +71,6 @@
         </div>
       </aside>
 
-      <!-- Backdrop -->
       <div class="backdrop" id="backdrop"></div>
 
       <!-- Main Content -->
@@ -82,7 +79,7 @@
         <section class="page" id="page-overview" data-page="overview">
           <div class="page-head">
             <h1>Overview</h1>
-            <p class="muted">Quick search + snapshots of your money.</p>
+            <p class="muted">Quick search and snapshots of your money.</p>
           </div>
 
           <div class="card">
@@ -93,7 +90,7 @@
                   <path d="M21 21l-4.3-4.3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                 </svg>
               </span>
-              <input id="overviewSearch" type="text" placeholder="Search goals, categories, transactions…" />
+              <input id="overviewSearch" data-keyboard="text" type="text" placeholder="Search goals, categories, transactions…" />
               <button class="pill" id="btnClearSearch">Clear</button>
             </div>
           </div>
@@ -133,7 +130,6 @@
             <div class="card">
               <div class="card-title-row">
                 <div class="card-title">Top Goals</div>
-                <button class="link-btn" id="btnGoGoals">View all</button>
               </div>
               <div class="mini-list" id="miniGoalsList"></div>
             </div>
@@ -141,8 +137,12 @@
 
           <div class="card">
             <div class="card-title-row">
-              <div class="card-title">Recent activity</div>
-              <button class="link-btn" id="btnGoExpenses">See expenses</button>
+              <div>
+                <div class="card-title">Recent activity</div>
+                <div class="muted small" id="recentTxInfo">
+                  Showing a short preview only.
+                </div>
+              </div>
             </div>
             <div class="tx-list" id="recentTxList"></div>
           </div>
@@ -179,16 +179,17 @@
             <div class="card">
               <div class="card-title-row">
                 <div class="card-title">Accounts</div>
-                <div class="chip" id="chipAutoLink">Auto linked</div>
+                <div class="chip" id="chipManualAccounts">Manual balances</div>
               </div>
+
               <div class="accounts" id="accountsList"></div>
 
               <div class="divider"></div>
 
               <div class="row between">
                 <div>
-                  <div class="card-title">Add transaction</div>
-                  <div class="muted small">This updates the chart + totals.</div>
+                  <div class="card-title" id="txFormTitle">Add transaction</div>
+                  <div class="muted small">This updates the chart and totals.</div>
                 </div>
               </div>
 
@@ -196,11 +197,11 @@
                 <div class="form-row">
                   <label>
                     Name
-                    <input id="txName" type="text" placeholder="e.g., Target" required />
+                    <input id="txName" data-keyboard="text" type="text" placeholder="e.g., Target" required />
                   </label>
                   <label>
                     Amount
-                    <input id="txAmount" type="number" step="0.01" placeholder="e.g., 24.99" required />
+                    <input id="txAmount" data-keyboard="number" type="number" step="0.01" placeholder="e.g., 24.99" required />
                   </label>
                 </div>
 
@@ -221,7 +222,8 @@
                     <input id="txDate" type="date" required />
                   </label>
 
-                  <button class="primary" type="submit">Add</button>
+                  <button class="primary" id="txSubmitBtn" type="submit">Add</button>
+                  <button class="pill hidden" id="btnCancelEdit" type="button">Cancel edit</button>
                 </div>
               </form>
             </div>
@@ -229,8 +231,9 @@
             <div class="card">
               <div class="card-title-row">
                 <div class="card-title">Spending by category</div>
-                <div class="chip" id="chipRange">12/01 – 12/31</div>
+                <div class="chip" id="chipRange">Current filter</div>
               </div>
+
               <div class="chart-wrap">
                 <canvas id="pieChart" width="380" height="260" aria-label="Pie chart"></canvas>
                 <div class="legend" id="pieLegend"></div>
@@ -242,16 +245,21 @@
             <div class="row between">
               <div>
                 <div class="card-title">Transactions</div>
-                <div class="muted small">Filter by category.</div>
+                <div class="muted small" id="txListInfo">
+                  Use the button to view, edit, or delete transactions.
+                </div>
               </div>
 
               <div class="row">
                 <select id="txFilter" class="select small"></select>
-                <button class="pill" id="btnClearTx">Clear all</button>
+                <button class="primary" id="btnOpenTxPopup" type="button">
+                  See transactions
+                </button>
+                <button class="pill" id="btnClearTx" type="button">
+                  Reset filter
+                </button>
               </div>
             </div>
-
-            <div class="tx-list" id="txList"></div>
           </div>
         </section>
 
@@ -291,7 +299,7 @@
               <form class="form inline" id="contribForm">
                 <label class="grow">
                   Contribute to this goal
-                  <input id="contribAmount" type="number" step="0.01" placeholder="e.g., 25" required />
+                  <input id="contribAmount" data-keyboard="number" type="number" step="0.01" placeholder="e.g., 25" required />
                 </label>
                 <button class="primary" type="submit">Add</button>
               </form>
@@ -301,7 +309,7 @@
 
             <div class="notes">
               <div class="card-title">Notes</div>
-              <textarea id="goalNotes" placeholder="Add a note (why this goal matters, due date, plan, etc.)"></textarea>
+              <textarea id="goalNotes" data-keyboard="text" placeholder="Add a note about this goal"></textarea>
               <div class="row end">
                 <button class="pill" id="btnSaveNotes">Save notes</button>
               </div>
@@ -311,7 +319,7 @@
           <div class="card">
             <div class="card-title-row">
               <div class="card-title">Recent contributions</div>
-              <div class="muted small">Auto-generated from your contributions.</div>
+              <div class="muted small">Short preview only.</div>
             </div>
             <div class="tx-list" id="goalContribList"></div>
           </div>
@@ -343,15 +351,13 @@
       </nav>
     </div>
 
-    <!-- Modals -->
+    <!-- Add Goal Modal -->
     <dialog class="modal" id="goalModal">
       <form method="dialog" class="modal-inner" id="goalModalForm">
         <div class="modal-head">
           <div class="modal-title">Add a savings goal</div>
           <button class="icon-btn" value="cancel" aria-label="Close">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
+            ✕
           </button>
         </div>
 
@@ -359,29 +365,29 @@
           <div class="form-row">
             <label>
               Goal name
-              <input id="newGoalName" type="text" placeholder="e.g., TV" required />
+              <input id="newGoalName" data-keyboard="text" type="text" placeholder="e.g., TV" required />
             </label>
           </div>
 
           <div class="form-row">
             <label>
               Target amount
-              <input id="newGoalTarget" type="number" step="0.01" placeholder="e.g., 200" required />
+              <input id="newGoalTarget" data-keyboard="number" type="number" step="0.01" placeholder="e.g., 200" required />
             </label>
             <label>
-              Starting saved (optional)
-              <input id="newGoalSaved" type="number" step="0.01" placeholder="e.g., 50" />
+              Starting saved
+              <input id="newGoalSaved" data-keyboard="number" type="number" step="0.01" placeholder="e.g., 50" />
             </label>
           </div>
 
           <div class="form-row">
             <label>
-              Accent color (optional)
-              <input id="newGoalColor" type="color" value="#5B8CFF" />
+              Accent color
+              <input id="newGoalColor" type="color" value="#4F46E5" />
             </label>
             <label>
-              Emoji (optional)
-              <input id="newGoalEmoji" type="text" maxlength="2" placeholder="📺" />
+              Emoji
+              <input id="newGoalEmoji" data-keyboard="text" type="text" maxlength="2" placeholder="📺" />
             </label>
           </div>
 
@@ -392,6 +398,39 @@
         </div>
       </form>
     </dialog>
+
+    <!-- Transactions Popup Modal -->
+    <dialog class="modal tx-modal" id="txModal">
+      <div class="modal-inner">
+        <div class="modal-head">
+          <div>
+            <div class="modal-title">Transactions</div>
+            <div class="muted small" id="txPopupInfo">Page 1</div>
+          </div>
+
+          <button class="icon-btn" id="btnCloseTxPopup" type="button" aria-label="Close transactions">
+            ✕
+          </button>
+        </div>
+
+        <div class="tx-list tx-popup-list" id="txPopupList"></div>
+
+        <div class="row between tx-page-controls">
+          <button class="pill" id="btnPrevTxPage" type="button">← Previous</button>
+          <div class="muted small" id="txPageLabel">Page 1</div>
+          <button class="pill" id="btnNextTxPage" type="button">Next →</button>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- On-screen Keyboard -->
+    <div class="keyboard hidden" id="keyboard">
+      <div class="keyboard-head">
+        <div class="keyboard-title" id="keyboardLabel">Text keyboard</div>
+        <button class="pill" id="btnHideKeyboard" type="button">Hide</button>
+      </div>
+      <div class="keyboard-keys" id="keyboardKeys"></div>
+    </div>
 
     <script src="./app.js"></script>
   </body>
